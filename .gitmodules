@@ -1,0 +1,3 @@
+[submodule "hsnf"]
+	path = hsnf
+	url = https://github.com/lan496/hsnf.git
