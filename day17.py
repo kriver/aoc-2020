@@ -16,7 +16,11 @@ Grid4D = Dict[Coord4D, State]
 
 
 class GameOfLife(Generic[G, C]):
-    def __init__(self, lines: List[str]):
+    def __init__(self, lines: List[str],
+                 activate=frozenset([3]),
+                 inactivate=frozenset([2, 3])):
+        self._activate = activate
+        self._inactivate = inactivate
         self._grid: G = {}
         y = 0
         for line in lines:
@@ -61,12 +65,13 @@ class GameOfLife(Generic[G, C]):
         current = self._grid.copy()
         for coord, state in current.items():
             neighbours, active = state
-            if active and neighbours not in {2, 3}:
+            if active and neighbours not in self._inactivate:
                 self._set_activity(coord, False)
-            elif not active and neighbours == 3:
+            elif not active and neighbours in self._activate:
                 self._set_activity(coord, True)
 
     def evolve(self, generations: int):
+        print('Generation %d has %d active cubes' % (0, self.active()))
         for generation in range(generations):
             self._evolve_1()
             print('Generation %d has %d active cubes'
